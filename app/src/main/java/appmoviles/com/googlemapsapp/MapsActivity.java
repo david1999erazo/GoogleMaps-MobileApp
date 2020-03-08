@@ -1,5 +1,6 @@
 package appmoviles.com.googlemapsapp;
 
+import androidx.annotation.MainThread;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
@@ -32,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener  {
     //Constants
     public final static int PETITION_PERMISSION_LOCATION = 101;
 
@@ -52,8 +53,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LatLng personalPosition, customPosition;
 
     private ArrayList<LatLng> customPositions;
+
     private ArrayList<Marker> addMarkers;
     private List<Address> personalAddress, customAddress;
+
     private Location userLocation, customLocation;
 
 
@@ -70,36 +73,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        /*
-        manager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        geocoder = new Geocoder(this, Locale.getDefault());
 
+        //Initilization
+        geocoder = new Geocoder(this, Locale.getDefault());
         addMarkers = new ArrayList<>();
         customPositions = new ArrayList<>();
 
-        btnAddLocation = findViewById(R.id.btnAddMarket);
-        btnAddLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(customPosition!= null){
-                    customPositions.add(customPosition);
-                    //getNearLocation();
-                }
-            }
-        });
-
-        ActivityCompat.requestPermissions(this, new String[]{
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-        }, REQUEST_CODE);
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 11);
-        } else {
-            //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
-            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
-        }
-        */
     }
 
 
@@ -109,40 +88,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             updateLocation(location);
             setLocation(location);
-
-            /*
-
-            if (personalMarker == null) {
-                personalPosition = new LatLng(location.getLatitude(), location.getLongitude());
-
-                try {
-                    personalAddress = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                    String addres = personalAddress.get(0).getAddressLine(0);
-                    //personalMarker = mMap.addMarker(new MarkerOptions().position(personalPosition).title(getString(R.string.userPosition) + addres));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(personalPosition));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-            } else {
-                userLocation = location;
-                personalPosition = null;
-                personalPosition = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(personalPosition, 15));
-                personalMarker.setPosition(personalPosition);
-
-                try {
-                    personalAddress = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                    String addres = personalAddress.get(0).getAddressLine(0).split(",")[0];
-                    //personalMarker.setTitle(getString(R.string.userPosition) + addres);
-                } catch (IOException e) {
-
-                    Toast.makeText(MapsActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-
-                }
-
-            }*/
+            userLocation=location; //VERIFICAR
         }
 
 
@@ -170,20 +116,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     };
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         myLocation();
-        //mMap.setOnMapLongClickListener(this);
+        mMap.setOnMapLongClickListener(this);
     }
 
     //Activar servicios del GPS
@@ -194,35 +131,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(intent);
         }
-        /*
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1000);
-            return;
-        }*/
+
     }
 
     private void setLocation(Location location) {
 
         //Obtener dirección de la calle
-
-        if (location.getLatitude() != 0.0 && location.getLongitude() != 0.0) {
+        if (personalMarker==null){
+            personalPosition = new LatLng(location.getLatitude(), location.getLongitude());
 
             try {
-                Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-                List<Address> personalAddress = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                if (!personalAddress.isEmpty()) {
-                    Address address = personalAddress.get(0);
-                    direccion = address.getAddressLine(0);
-                }
-
+                personalAddress = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
+                String addres = personalAddress.get(0).getAddressLine(0);
+                personalMarker = mMap.addMarker(new MarkerOptions().position(personalPosition).title("Address: "+ addres));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(personalPosition));
             } catch (IOException e) {
                 e.printStackTrace();
-
             }
-
-
         }
+        else{
+            userLocation=location;
+            personalPosition = null;
+            personalPosition = new LatLng(location.getLatitude(), location.getLongitude());
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(personalPosition,15));
+            personalMarker.setPosition(personalPosition);
+            try {
+                personalAddress = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
+                String addres = personalAddress.get(0).getAddressLine(0).split(",")[0];
+                personalMarker.setTitle("Address: "+ addres);
 
+            } catch (IOException e) {
+                Toast.makeText(MapsActivity.this,e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }
 
     }
 
@@ -232,10 +173,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng coordinates = new LatLng(lat, ing);
         CameraUpdate myLocation = CameraUpdateFactory.newLatLngZoom(coordinates, 16);
         if (marker != null) marker.remove();
-        marker = mMap.addMarker(new MarkerOptions().position(coordinates).title("Address: " + direccion));
+        marker = mMap.addMarker(new MarkerOptions().position(coordinates).title("Address: " + direccion).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE )));
         mMap.animateCamera(myLocation);
 
-        //.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)
     }
 
     private void myLocation() {
@@ -262,10 +202,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+
+        customPosition = latLng;
+        customLocation = new Location("custom Location");
+        customLocation.setLongitude(latLng.longitude);
+        customLocation.setLatitude(latLng.latitude);
+
+        double distance = Math.round(userLocation.distanceTo(customLocation)*100/100d);
+
+        try{
+
+            customAddress = geocoder.getFromLocation(latLng.latitude,latLng.longitude,1);
+            String direccionX = customAddress.get(0).getAddressLine(0).split(",")[0];
+
+            if(customPositionMarker==null){
+                customPositionMarker = mMap.addMarker(new MarkerOptions().position(customPosition).title("Address: "+ direccionX).snippet("Distance: "+distance + " m").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+            }else{
+                customPositionMarker.setPosition(latLng);
+                customPositionMarker.setTitle(direccionX);
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+
+
+
+    }
+
+
     public void showMessage(){
         Toast toast = Toast.makeText(this, message, Toast.LENGTH_LONG);
         toast.show();
     }
+
 
 
 }
