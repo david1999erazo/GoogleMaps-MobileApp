@@ -4,24 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:foregroundTint="#F514B9B9"
     tools:context=".MainActivity">
 
     <Button
         android:id="@+id/btnMaps"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ir al mapa"
+        android:layout_width="147dp"
+        android:layout_height="55dp"
         android:layout_gravity="center"
+        android:backgroundTint="#FC11C5B6"
+        android:text="Go to Map"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.223" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="291dp"
+        android:layout_height="411dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.13"
-
-
-        />
-
+        app:layout_constraintVertical_bias="0.25"
+        app:srcCompat="@drawable/posicion" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,20 +14,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MapsActivity"
-        tools:layout_editor_absoluteX="-16dp"
-        tools:layout_editor_absoluteY="64dp" />
+        tools:layout_editor_absoluteX="-35dp"
+        tools:layout_editor_absoluteY="21dp" />
 
     <Button
         android:id="@+id/btnAddMarker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="112dp"
+        android:layout_height="55dp"
+        android:backgroundTint="#FC11C5B6"
         android:text="Add Marker"
+        android:textColor="#F7F5F5"
         app:layout_constraintBottom_toBottomOf="@+id/map"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.11"
+        app:layout_constraintHorizontal_bias="0.053"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/map"
-        app:layout_constraintVertical_bias="0.01999998" />
+        app:layout_constraintVertical_bias="0.023" />
 
     <TextView
         android:id="@+id/textDescription"
@@ -37,7 +39,7 @@
         android:layout_marginTop="580dp"
         android:layout_marginEnd="38dp"
         android:layout_marginBottom="10dp"
-        android:background="#7E9721"
+        android:background="#FC11C5B6"
         android:textAlignment="center"
         android:textColor="#DBDBDB"
         android:textSize="24sp"
@@ -47,6 +49,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnAddMarker"
         app:layout_constraintVertical_bias="0.42000002" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="210dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="10dp"
+        android:background="#FC11C5B6"
+        app:layout_constraintBottom_toTopOf="@+id/textDescription"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnAddMarker"
+        app:layout_constraintTop_toTopOf="@+id/map"
+        app:layout_constraintVertical_bias="0.01999998" />
+
+    <EditText
+        android:id="@+id/txtNamePlace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="Name of the place"
+        android:inputType="textPersonName"
+        android:textColor="#FAF7F7"
+        app:layout_constraintBottom_toTopOf="@+id/textDescription"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnAddMarker"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.01999998" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

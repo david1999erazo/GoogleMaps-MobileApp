@@ -1,0 +1,15 @@
+David Alejandro Erazo Ochoa
+Cod: A00130528
+
+Reto 1 Google Maps
+
+Repositorio: https://github.com/david1999erazo/GoogleMaps-MobileApp.git
+
+Intrucciones:
+
+	1. Oprimir boton "Go to Map"
+	2. Para sacar un marcador debe dejar oprimida la pantalla hasta que salga el marker
+	3. Despues de tener el marker seleccionado el le mostrara la direccion y la distancia frente a su ubicación
+	4. Si desea guardarlo debe colocar un nombre para le lugar y posteriormente dar click en el botón "Add marker"
+	5. El texto del marker con el nombre del lugar se actualizará cuando agrege otro marker.
+	6. En la caja inferior se le mostrara el lugar mas cercano a su posición o le dira si se encuentra en dicho lugar

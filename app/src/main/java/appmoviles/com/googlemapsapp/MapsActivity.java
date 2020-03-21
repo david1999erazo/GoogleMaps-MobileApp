@@ -1,6 +1,5 @@
 package appmoviles.com.googlemapsapp;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
@@ -17,6 +16,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,7 +65,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Button btnAddMarker;
 
     //TextView
-    private TextView textDescription;
+    private TextView txtDescription;
+
+    //EditText
+    private EditText txtNamePlace;
 
 
     @Override
@@ -84,32 +87,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         customPositions = new ArrayList<>();
 
 
-        textDescription = findViewById(R.id.textDescription);
+        txtDescription = findViewById(R.id.textDescription);
+        txtNamePlace = findViewById(R.id.txtNamePlace);
+
         btnAddMarker = findViewById(R.id.btnAddMarker);
         btnAddMarker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(customPosition!=null){
-                    customPositions.add(customPosition);
 
+                if(txtNamePlace!=null){
 
-                    List<Address> nearAddress;
-                    Location vLocation = new Location("variable location");
-                    try {
-                        for (int i = 0; i<customPositions.size();i++){
-                            nearAddress = geocoder.getFromLocation(customPositions.get(i).latitude,customPositions.get(i).longitude,1);
-                            vLocation.setLatitude(customPositions.get(i).latitude);
-                            vLocation.setLongitude(customPositions.get(i).longitude);
-                            double distance = Math.round((userLocation.distanceTo(vLocation)*100)/100d);
-                            String addres = nearAddress.get(0).getAddressLine(0).split(",")[0];
-                            Marker newMarker = mMap.addMarker(new MarkerOptions().position(customPositions.get(i)).icon((BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))).title("Address: "+addres).snippet("Distance: "+distance+" m"));
-                            addMarkers.add(newMarker);
+                    String namePlace = txtNamePlace.getText().toString();
+                    if(customPosition!=null){
+
+                        customPositions.add(customPosition);
+                        List<Address> nearAddress;
+                        Location vLocation = new Location("variable location");
+                        try {
+                            for (int i = 0; i<customPositions.size();i++){
+                                nearAddress = geocoder.getFromLocation(customPositions.get(i).latitude,customPositions.get(i).longitude,1);
+                                vLocation.setLatitude(customPositions.get(i).latitude);
+                                vLocation.setLongitude(customPositions.get(i).longitude);
+                                double distance = Math.round((userLocation.distanceTo(vLocation)*100)/100d);
+                                String addres = nearAddress.get(0).getAddressLine(0).split(",")[0];
+                                Marker newMarker = mMap.addMarker(new MarkerOptions().position(customPositions.get(i)).icon((BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))).title(namePlace).snippet("Address: "+ addres).snippet("Distance: "+distance+" m"));
+                                addMarkers.add(newMarker);
+                            }
                         }
+                        catch (IOException e){
+                            e.printStackTrace();
+                        }
+                        getNearLocation();
                     }
-                    catch (IOException e){
-                        e.printStackTrace();
-                    }
-                    getNearLocation();
+
+                    txtNamePlace.setText("");
+
+                }else{
+                    Toast.makeText(MapsActivity.this,"Please insert the name of the place", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -197,7 +211,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             } catch (IOException e) {
                 Toast.makeText(MapsActivity.this,e.getMessage(), Toast.LENGTH_LONG).show();
-            }
+              }
         }
 
     }
@@ -291,11 +305,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (nearAddress!=null){
                 if (distance<100){
                     String address = nearAddress.get(0).getAddressLine(0).split(",")[0];
-                    textDescription.setText("You are in the place: " +address);
+                    txtDescription.setText("You are in the place: " +address);
                 }
                 else{
                     String address = nearAddress.get(0).getAddressLine(0).split(",")[0];
-                    textDescription.setText("Near location: "+ address);
+                    txtDescription.setText("Near location: "+ address);
                 }
             }
 
